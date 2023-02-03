@@ -57,12 +57,12 @@ public class EnemyController : MonoBehaviour, IEnemy
     {
 
         RaycastHit hit;
-        if (Physics.SphereCast(_enemyTransform.position, _enemyTransform.lossyScale.x * 8, _enemyTransform.forward, out hit, 100f, _layer))
+        if (Physics.SphereCast(_enemyTransform.position, _enemyTransform.lossyScale.x * 3, _enemyTransform.forward, out hit, 5f, _layer))
         {
             
             Gizmos.color = new Color(32, 32, 32, 255);
             Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * hit.distance);
-            Gizmos.DrawWireSphere(_fireTransform.position + _fireTransform.forward * hit.distance, _enemyTransform.lossyScale.x * 8);
+            Gizmos.DrawWireSphere(_fireTransform.position + _fireTransform.forward * hit.distance, _enemyTransform.lossyScale.x * 3);
             if (hit.transform.tag == "Player")
             {
                 isFollowingPlayer = true;
@@ -73,7 +73,7 @@ public class EnemyController : MonoBehaviour, IEnemy
         {
             
             Gizmos.color = new Color(32, 32, 32, 255);
-            Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * 100f);
+            Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * 5f);
             if (isFollowingPlayer)
             {
 
