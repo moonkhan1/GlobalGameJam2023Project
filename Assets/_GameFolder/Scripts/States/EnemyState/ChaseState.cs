@@ -34,11 +34,11 @@ namespace PuzzlePlatformer.States.EnemyState
         public void StateControl()
         {
             // SoundManager.Instance._enemySound.Play();
-            _navMeshAgent.SetDestination(_target.transform.position);
-            _navMeshAgent.speed = 11;
             _splineFollower.follow = false;
-            // _enemyController.GetComponentInChildren<ParticleSystem>().Play();
             _enemyController.isInPatrol = false;
+            _navMeshAgent.SetDestination(_target.transform.position);
+            _navMeshAgent.speed = 3;
+            // _enemyController.GetComponentInChildren<ParticleSystem>().Play();
         }
     }
 }
