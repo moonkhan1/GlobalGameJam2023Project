@@ -38,7 +38,7 @@ namespace PuzzlePlatformer.States.EnemyState
             _enemyController.isInPatrol = false;
             _navMeshAgent.SetDestination(_target.transform.position);
             _navMeshAgent.speed = 3;
-            // _enemyController.GetComponentInChildren<ParticleSystem>().Play();
+            _enemyController.GetComponentInChildren<ParticleSystem>().Play();
         }
     }
 }

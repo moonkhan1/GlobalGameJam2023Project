@@ -36,12 +36,12 @@ namespace PuzzlePlatformer.States.EnemyState
         public void StateControl()
         {
             _navMeshAgent.SetDestination(_splineFollower.spline.GetPointPosition(0));
-            _enemyController.transform.LookAt(_splineFollower.spline.GetPointPosition(0));
+            // _enemyController.transform.LookAt(_splineFollower.spline.GetPointPosition(0));
             _enemyController.transform.DOMove(new Vector3(_splineFollower.spline.GetPointPosition(0).x, _splineFollower.spline.GetPointPosition(0).y, _splineFollower.spline.GetPointPosition(0).z), 1f)
             .OnComplete(() =>
             {
                 _enemyController.isInPatrol = true;
-                // _enemyController.transform.GetComponentInChildren<ParticleSystem>().Stop();
+                _enemyController.transform.GetComponentInChildren<ParticleSystem>().Stop();
                 _splineFollower.follow = true;
                 _navMeshAgent.speed = 3;
                 // _splineFollower.Restart(0);

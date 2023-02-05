@@ -6,26 +6,33 @@ public class PlayerController : MonoBehaviour
 {
     private Inventory inventory;
     [SerializeField] private UIInventory uiInventory;
-
-    public float speed = 6f;
-    public float jumpForce = 5f;
-    public float crouchSpeed = 3f;
-    public float pushForce = 5f;
-    public float pullForce = 5f;
+    IDevice _device;
+    private PlayerCameraBase _playerCamera;
+    private LevelControlBase _levelControl;
+    public float speed { get; set; } = 6f;
+    public float jumpForce = 7f;
+    private float crouchSpeed = 3f;
+    public float rotationSpeed = 10f;
+    private float pushForce = 5f;
+    private float pullForce = 5f;
 
     private bool isCrouching = false;
     private bool isGrounded = false;
 
-
+    private Animator _anim;
 
     private bool isStop = false;
     public bool IsPlayerStop => isStop;
     private void Awake()
     {
-        // inventory = new Inventory();
-        // uiInventory.SetInventory(inventory);
+        _device = new DeviceController(this);
+        _playerCamera = new PlayerCameraController(this);
+        _levelControl = new LevelController(this);
+        
 
-        // ItemAtWorld.SpawnNewItem(new Vector3(-25,-25,32), new Item{itemType = Item.ItemType.Feather, amount = 1});
+    }
+    private void Start() {
+        _anim = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -33,21 +40,52 @@ public class PlayerController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0, 0);
+        direction = direction.normalized;
 
-        if (isCrouching)
+        if (direction.magnitude > 0.1f)
         {
-            transform.position += direction * crouchSpeed * Time.deltaTime;
+            if (isCrouching)
+            {
+                _anim.SetBool("Crouching", true);
+                _anim.SetBool("CrouchStay", false);
+
+                transform.position += direction * crouchSpeed * Time.deltaTime;
+            }
+            else
+            {
+                _anim.SetBool("Crouching", false);
+                //_anim.SetBool("CrouchStay", true);
+
+                transform.position += direction * speed * Time.deltaTime;
+            }
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
         else
         {
-            transform.position += direction * speed * Time.deltaTime;
+            if (isCrouching)
+            {
+                _anim.SetBool("CrouchStay", true);
+                _anim.SetBool("Crouching", false);
+            }
+            else
+            {
+                _anim.SetBool("CrouchStay", false);
+                //_anim.SetBool("Crouching", true);
+            }
         }
 
+        _anim.SetFloat("Walk", direction.magnitude);
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
+            _anim.SetBool("Jumping", true);
             GetComponent<Rigidbody>().AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
             isGrounded = false;
         }
+
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -58,8 +96,29 @@ public class PlayerController : MonoBehaviour
             isCrouching = false;
         }
     }
-    private void OnCollisionEnter(Collision other) 
+
+    private void OnTriggerEnter(Collider other)
     {
+        _playerCamera.TriggerForCamera(other);
+        _levelControl.IsLeveltriggered(other);
+    }
+    private void OnCollisionEnter(Collision other)
+    {
+        _anim.SetBool("Jumping", false);
         isGrounded = true;
+        if(other.gameObject.CompareTag("Enemy"))
+        {
+            GameManager.Instance.LoadScene("Game");
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        _device.WhenTriggerInteractable(other, true);
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        _device.WhenTriggerInteractable(other, false);
     }
 }
