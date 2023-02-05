@@ -18,18 +18,19 @@ public class MonkeyController : MonoBehaviour
     }
     private void Start() {
         if(AnimalManager.Instance != null)
-            AnimalManager.Instance.isBirdEscaped += MonekyMovement;
+            AnimalManager.Instance.isMonkeyEscaped += MonekyMovement;
     }
 
 
     private void OnDisable()
     {
-        AnimalManager.Instance.isBirdEscaped -= MonekyMovement;
+        AnimalManager.Instance.isMonkeyEscaped -= MonekyMovement;
     }
 
     private void MonekyMovement()
     {
         _anim.SetBool("isEscaped", true);
+        _transform.DORotate(new Vector3(0, 90, 0), 0.2f);
         _transform.DOMoveX(_destination.transform.position.x, 25f).OnComplete(()=>{
             Destroy(gameObject);
         });

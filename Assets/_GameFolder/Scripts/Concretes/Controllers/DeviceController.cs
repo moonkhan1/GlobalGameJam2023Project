@@ -12,7 +12,7 @@ public class DeviceController : IDevice
     private bool isHiding = false;
     private bool isKnifeEquiped = false;
     private bool isKeyEquiped = false;
-    private bool isNeedleEquiped = false;
+    private bool isCocoEquiped = false;
     
 
 
@@ -65,15 +65,15 @@ public class DeviceController : IDevice
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     items.Value.gameObject.SetActive(false);
-                    AnimalManager.Instance?.RaiseOnButtonClickBird();
+                    AnimalManager.Instance?.RaiseOnButtonClickMonkey();
                 }
             }
-            if (other.name == items.Key.name && items.Key.name.Contains("4") && isNeedleEquiped)
+            if (other.name == items.Key.name && items.Key.name.Contains("4") && isCocoEquiped)
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     items.Value.gameObject.SetActive(false);
-                    AnimalManager.Instance?.RaiseOnButtonClickMonkey();
+                    AnimalManager.Instance?.RaiseOnButtonClickBird();
                 }
             }
             if (other.name == items.Key.name && items.Key.tag.Contains("Collectable"))
@@ -90,7 +90,7 @@ public class DeviceController : IDevice
                 }
                 if(other.name.Contains("Coco"))
                 {
-                    isNeedleEquiped = true;
+                    isCocoEquiped = true;
                 }
             }
         }
