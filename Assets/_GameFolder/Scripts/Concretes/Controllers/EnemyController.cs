@@ -57,22 +57,31 @@ public class EnemyController : MonoBehaviour, IEnemy
     void Update()
     {
         _stateMachine.StateControl();
+         EnemyCheck();
     }
 
+    private void OnCollisionEnter(Collision other) {
+        if(other.transform.CompareTag("Player"))
+        {
+            GameManager.Instance.LoadScene("Game");
+        }
+    }
 
-    void OnDrawGizmos()
+    void EnemyCheck()
     {
 
         RaycastHit hit;
         if (Physics.SphereCast(_enemyTransform.position, _enemyTransform.lossyScale.x * 1.2f, _enemyTransform.forward, out hit, 2f, _layer))
         {
 
-            Gizmos.color = new Color(32, 32, 32, 0);
-            Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * hit.distance);
-            Gizmos.DrawWireSphere(_fireTransform.position + _fireTransform.forward * hit.distance, _enemyTransform.lossyScale.x * 1.2f);
+            // Gizmos.color = new Color(32, 32, 32, 0);
+            // Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * hit.distance);
+            // Gizmos.DrawWireSphere(_fireTransform.position + _fireTransform.forward * hit.distance, _enemyTransform.lossyScale.x * 1.2f);
+            // Debug.DrawLine(_fireTransform.position,_fireTransform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
             if (hit.transform.gameObject.layer == 6)
             {
                 isFollowingPlayer = true;
+                _anim.SetBool("isRunning", true);
             }
 
             if (hit.transform.gameObject.layer == 7)
@@ -90,11 +99,12 @@ public class EnemyController : MonoBehaviour, IEnemy
         else
         {
 
-            Gizmos.color = new Color(32, 32, 32, 0);
-            Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * 2f);
+            // Gizmos.color = new Color(32, 32, 32, 0);
+            // Gizmos.DrawRay(_fireTransform.position, _fireTransform.forward * 2f);
+            // Debug.DrawLine(_fireTransform.position,_fireTransform.forward * hit.distance, Color.blue);
             if (isFollowingPlayer)
             {
-
+                _anim.SetBool("isRunning", false);
                 isFollowingPlayer = false;
             }
 

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using CASP.SoundManager;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     private Inventory inventory;
-    [SerializeField] private UIInventory uiInventory;
+    // [SerializeField] private UIInventory uiInventory;
+    [SerializeField] private AudioSource Foot;
     IDevice _device;
     private PlayerCameraBase _playerCamera;
     private LevelControlBase _levelControl;
@@ -36,38 +38,48 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0, 0);
         direction = direction.normalized;
-
+        Debug.Log(direction.magnitude);
+        if(direction.magnitude == 0)
+        {
+            Foot.Play();
+        }
         if (direction.magnitude > 0.1f)
         {
+           
             if (isCrouching)
             {
                 _anim.SetBool("Crouching", true);
                 _anim.SetBool("CrouchStay", false);
-
                 transform.position += direction * crouchSpeed * Time.deltaTime;
             }
             else
             {
                 _anim.SetBool("Crouching", false);
+                // SoundManager.Instance.Play("Foot");
                 //_anim.SetBool("CrouchStay", true);
 
                 transform.position += direction * speed * Time.deltaTime;
             }
             if (direction != Vector3.zero)
             {
+                
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
+        
         else
         {
+            
             if (isCrouching)
             {
+               
                 _anim.SetBool("CrouchStay", true);
                 _anim.SetBool("Crouching", false);
             }
@@ -77,11 +89,11 @@ public class PlayerController : MonoBehaviour
                 //_anim.SetBool("Crouching", true);
             }
         }
-
         _anim.SetFloat("Walk", direction.magnitude);
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             _anim.SetBool("Jumping", true);
+            SoundManager.Instance.Play("Jump");
             GetComponent<Rigidbody>().AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
             isGrounded = false;
         }

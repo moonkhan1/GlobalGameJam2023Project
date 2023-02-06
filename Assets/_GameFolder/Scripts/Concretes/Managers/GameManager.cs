@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
-        // SoundManager.Instance.Play()    
     }
     public void LoadScene(string name)
     {

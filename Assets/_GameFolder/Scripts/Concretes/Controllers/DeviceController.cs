@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using TMPro;
+using CASP.SoundManager;
 // using CASP.SoundManager;
 public class DeviceController : IDevice
 {
@@ -35,6 +36,7 @@ public class DeviceController : IDevice
             {
                 if (Input.GetKeyDown(KeyCode.E) && !isHiding)
                 {
+                    SoundManager.Instance.Play("Interaction");
                     GameObject.FindObjectOfType<PlayerController>().transform.DOMoveZ(-2, 0.3f);
                     isHiding = true;
                     _playerController.speed = 0f;
@@ -42,7 +44,8 @@ public class DeviceController : IDevice
                 }
                 else if (Input.GetKeyDown(KeyCode.E) && isHiding)
                 {
-                    GameObject.FindObjectOfType<PlayerController>().transform.DOMoveZ(-6.7f, 0.3f);
+                    SoundManager.Instance.Play("Interaction");
+                    GameObject.FindObjectOfType<PlayerController>().transform.DOMoveZ(-7.7f, 0.3f);
                     isHiding = false;
                     _playerController.speed = 6f;
 
@@ -53,6 +56,7 @@ public class DeviceController : IDevice
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    SoundManager.Instance.Play("Interaction");
                     if(items.Value.GetComponent<SpringJoint>() != null)
                         items.Value.GetComponent<SpringJoint>().connectedBody = null;
                     AnimalManager.Instance?.RaiseOnButtonClick();
@@ -64,7 +68,9 @@ public class DeviceController : IDevice
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    SoundManager.Instance.Play("Interaction");
                     items.Value.gameObject.SetActive(false);
+                    SoundManager.Instance.Play("Monkey");
                     AnimalManager.Instance?.RaiseOnButtonClickMonkey();
                 }
             }
@@ -72,6 +78,7 @@ public class DeviceController : IDevice
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    SoundManager.Instance.Play("Interaction");
                     items.Value.gameObject.SetActive(false);
                     AnimalManager.Instance?.RaiseOnButtonClickBird();
                 }
